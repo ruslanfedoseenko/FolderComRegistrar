@@ -8,7 +8,7 @@ namespace FolderComRegisterar
     {
         static void Main(string[] args)
         {
-
+			Output.Init();
             var dir = Directory.GetCurrentDirectory();
 	        string[] extentions = new[]{"*.dll","*.ocx"};
 	        var argsMap = ConsoleAppHelper.ResolveCmdArgsDictionary(args);
