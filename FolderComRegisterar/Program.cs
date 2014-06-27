@@ -8,9 +8,10 @@ namespace FolderComRegisterar
     {
         static void Main(string[] args)
         {
+			AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionEventHandler;
 			Output.Init();
             var dir = Directory.GetCurrentDirectory();
-	        string[] extentions = new[]{"*.dll","*.ocx"};
+	        string[] extentions = {"*.dll","*.ocx"};
 	        var argsMap = ConsoleAppHelper.ResolveCmdArgsDictionary(args);
 	        if (argsMap.ContainsKey("-h"))
 	        {
@@ -22,7 +23,7 @@ namespace FolderComRegisterar
 		        dir = argsMap["-d"];
 		        if (!Directory.Exists(dir))
 		        {
-					Console.WriteLine("{0} doesnot exists!",dir);
+					Output.WriteInfo("Folder {0} doesnot exists!",dir);
 					PrintUsage();
 			        return;
 		        }
@@ -36,13 +37,18 @@ namespace FolderComRegisterar
 			libReg.StartRgisteringLibraries();
         }
 
+		static void UnhandledExceptionEventHandler(object sender, UnhandledExceptionEventArgs e)
+		{
+			Output.WriteError(e.ExceptionObject.ToString());
+		}
+
 	    private static void PrintUsage()
 	    {
-			Console.WriteLine("Usage: {0} [options]", AppDomain.CurrentDomain.FriendlyName);
-			Console.WriteLine("Options:");
-			Console.WriteLine("    -d : Directory to scan for COM objects. Default: Working dirrectory of Application.");
-			Console.WriteLine("    -e : Patterns which will be used for searching of COM objects. Default: \"*.ocx,*.dll\"");
-			Console.WriteLine("    -h : Displays this message.");
+			Output.WriteInfo("Usage: {0} [options]", AppDomain.CurrentDomain.FriendlyName);
+			Output.WriteInfo("Options:");
+			Output.WriteInfo("    -d : Directory to scan for COM objects. Default: Working dirrectory of Application.");
+			Output.WriteInfo("    -e : Patterns which will be used for searching of COM objects. Default: \"*.ocx,*.dll\"");
+			Output.WriteInfo("    -h : Displays this message.");
 	    }
     }
 }
